@@ -43,7 +43,7 @@ The AP2 boundary is intentionally represented as a mandate envelope rather than 
 
 ## Automated production gate
 
-`.github/workflows/production-gate.yml` now gates the branch with:
+`.github/workflows/production-gate.yml` gates changes with:
 
 1. frozen pnpm install
 2. TypeScript type checking
@@ -53,6 +53,10 @@ The AP2 boundary is intentionally represented as a mandate envelope rather than 
 6. Docker Compose configuration validation
 7. Go and verifier-adapter image builds
 8. Foundry Solidity build/test when a Foundry project is present
+
+## Current verification state
+
+**GitHub-side verification: PASS.** The branch contains all 14 expected integration/deployment files and the README reflects the current architecture. The latest PR head is `160f3ca16bee9d2b92967ab3a95ade52824bd511`. GitHub currently reports the PR as open and mergeable. No GitHub Actions run is currently associated with that exact head, so CI execution itself is **not yet verified**. cite_placeholder
 
 ### Production authorization checklist
 
@@ -66,10 +70,6 @@ The system must not be labeled production-ready until all of the following have 
 - Authenticated end-to-end tests cover SkyGaming, SkySchool, SkyShop, SkyLanguage, and SkyDating.
 - TLS, DNS, monitoring, backups, rollback, and incident procedures are verified.
 - Deployment smoke tests pass against the actual production environment.
-
-## Verification record
-
-The integration work is committed to the public GitHub repository on `feature/universal-ecosystem-federation`. GitHub-side file verification confirms the federation sources, UCP manifest, CI gate, Go service, and deployment artifacts are present on the branch.
 
 **Do not confuse “code committed” with “production deployed.”** The final merge/deploy gate is intentionally evidence-based.
 
