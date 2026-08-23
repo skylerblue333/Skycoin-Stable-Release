@@ -1,0 +1,52 @@
+services:
+  go-websocket-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile.go
+    ports:
+      - "8080:8080"
+    environment:
+      SKY_WS_ALLOWED_ORIGINS: ${SKY_WS_ALLOWED_ORIGINS:?set allowed browser origins}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks: [skycoin-mesh]
+    restart: unless-stopped
+
+  skycoin-application:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL:?set public websocket URL}
+      NEXT_PUBLIC_CHAIN_ID: ${NEXT_PUBLIC_CHAIN_ID:-4444}
+    depends_on:
+      go-websocket-engine:
+        condition: service_healthy
+      zkml-verifier-adapter:
+        condition: service_healthy
+    networks: [skycoin-mesh]
+    restart: unless-stopped
+
+  zkml-verifier-adapter:
+    build:
+      context: .
+      dockerfile: Dockerfile.zkml
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8090/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks: [skycoin-mesh]
+    restart: unless-stopped
+
+networks:
+  skycoin-mesh:
+    driver: bridge
