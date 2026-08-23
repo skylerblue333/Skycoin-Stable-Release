@@ -7,6 +7,7 @@ import (
     "os"
     "os/signal"
     "strings"
+    "sync"
     "syscall"
     "time"
 
@@ -14,11 +15,11 @@ import (
 )
 
 const (
-    readLimit       = 1 << 20
-    writeWait       = 10 * time.Second
-    pongWait        = 60 * time.Second
-    pingPeriod      = (pongWait * 9) / 10
-    handshakeWait   = 10 * time.Second
+    readLimit     = 1 << 20
+    writeWait     = 10 * time.Second
+    pongWait      = 60 * time.Second
+    pingPeriod    = (pongWait * 9) / 10
+    handshakeWait = 10 * time.Second
 )
 
 func allowedOrigin(r *http.Request) bool {
@@ -35,10 +36,7 @@ func allowedOrigin(r *http.Request) bool {
     return false
 }
 
-var upgrader = websocket.Upgrader{
-    CheckOrigin: allowedOrigin,
-    HandshakeTimeout: handshakeWait,
-}
+var upgrader = websocket.Upgrader{CheckOrigin: allowedOrigin, HandshakeTimeout: handshakeWait}
 
 func handleSkyGamingSocket(w http.ResponseWriter, r *http.Request) {
     conn, err := upgrader.Upgrade(w, r, nil)
@@ -49,11 +47,12 @@ func handleSkyGamingSocket(w http.ResponseWriter, r *http.Request) {
     defer conn.Close()
     conn.SetReadLimit(readLimit)
     _ = conn.SetReadDeadline(time.Now().Add(pongWait))
-    conn.SetPongHandler(func(string) error {
-        return conn.SetReadDeadline(time.Now().Add(pongWait))
-    })
+    conn.SetPongHandler(func(string) error { return conn.SetReadDeadline(time.Now().Add(pongWait)) })
 
     done := make(chan struct{})
+    var closeOnce sync.Once
+    stop := func() { closeOnce.Do(func() { close(done) }) }
+
     go func() {
         ticker := time.NewTicker(pingPeriod)
         defer ticker.Stop()
@@ -62,7 +61,7 @@ func handleSkyGamingSocket(w http.ResponseWriter, r *http.Request) {
             case <-ticker.C:
                 _ = conn.SetWriteDeadline(time.Now().Add(writeWait))
                 if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-                    close(done)
+                    stop()
                     return
                 }
             case <-done:
@@ -70,7 +69,7 @@ func handleSkyGamingSocket(w http.ResponseWriter, r *http.Request) {
             }
         }
     }()
-    defer close(done)
+    defer stop()
 
     for {
         messageType, payload, err := conn.ReadMessage()
