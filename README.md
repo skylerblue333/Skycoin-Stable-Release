@@ -1,72 +1,94 @@
 <!-- PORTFOLIO PROJECT PROFILE: maintained by the repository owner -->
 
-## Project profile and code-audit snapshot
-
-**What this is:** **Skycoin-Stable-Release** is a public repository described as: “Optimized and stabilized version of the Skycoin digital asset platform. #SkyCoin4444 #AI #Blockchain #DevOps #Innovation”.
-
-**Current status:** The repository remains a public engineering project. This branch adds a reference implementation for cross-module federation; it does **not** claim that external UCP/AP2/MCP services, a ZK verifier, production wallets, or smart contracts are deployed merely because source files exist.
-
----
-
 # Skycoin Stable Release
 
-![GitHub stars](https://img.shields.io/github/stars/skylerblue333/Skycoin-Stable-Release?style=flat-square)
-![GitHub license](https://img.shields.io/github/license/skylerblue333/Skycoin-Stable-Release?style=flat-square)
+**Skycoin-Stable-Release** is a public engineering component of the **SkyCoin4444** ecosystem spanning TypeScript/React, AI, blockchain, education, commerce, social modules, and real-time infrastructure.
 
-## 🌟 Overview
-**Skycoin-Stable-Release** is a public engineering component of the **SkyCoin4444** ecosystem. It contains a large TypeScript/React application plus supporting infrastructure and experimentation across software, AI, blockchain, education, commerce and social modules.
+> **Status: production-gate engineering branch — NOT a production deployment.** Source code, CI configuration, and manifests are not evidence that external protocols, wallets, ZKML verifiers, or contracts have been deployed.
 
-## 🚀 Universal Ecosystem Federation
-This branch consolidates the requested **SkyLanguage + SkyDating + SkyShop + SkySchool + SkyGaming** integration boundary.
+## Universal Ecosystem Federation
 
-### Included in this branch
-- **UCP discovery manifest:** `/.well-known/ucp`
-- **Unified settlement boundary:** `contracts/SkyEcosystemMaxVault.sol`
-- **Federation gateway primitives:** `server/ecosystemMaxFederation.ts`
-- **Triad portal:** `client/src/components/LiveEcosystemTriadPortal.tsx`
-- **Protocol scope:** UCP discovery, AP2-style user-intent envelopes, MCP/A2A transport boundaries, and ZK proof verification hooks.
+This branch connects the integration boundaries for:
 
-### SkySchool milestone
-- Adaptive difficulty engine: integration target documented.
-- Soulbound credentials: contract integration boundary documented.
-- Learn-to-earn: reputation/reward settlement boundary documented.
+- **SkyLanguage** — language sessions and reputation rewards
+- **SkyDating** — privacy-preserving personhood/match workflows
+- **SkyShop** — agent-discoverable commerce and settlement
+- **SkySchool** — credentials and learn-to-earn reward boundaries
+- **SkyGaming** — real-time multiplayer/session transport
 
-### Social-Fi & Commerce Triad
-- **SkyLanguage:** language-session and reputation-reward boundary.
-- **SkyDating:** privacy-preserving personhood/match verification boundary.
-- **SkyShop:** agent-discoverable commerce and settlement boundary.
+### Protocol layer
 
-### Security model
-The reference vault intentionally separates **authorization**, **mandate replay protection**, **ZK proof verification**, and **settlement**. The contract requires an authorized agent and an external verifier. The TypeScript gateway creates canonical mandate identifiers but does not pretend to be a cryptographic signing implementation.
+- `/.well-known/ucp` — UCP-style merchant and capability discovery
+- `server/ecosystemMaxFederation.ts` — mandate envelope and payload validation
+- `contracts/SkyEcosystemMaxVault.sol` — authorized-agent + ZK verifier settlement boundary
+- `contracts/SkyEcosystemUltimateVault.sol` — upgraded universal settlement boundary
+- `client/src/components/LiveEcosystemTriadPortal.tsx` — Social-Fi/commerce control portal
 
-> **Important:** Source code is not deployment evidence. Before production use, the vault and verifier require independent security review, a real signature/messaging implementation, integration tests, deployment addresses, funded wallets, network configuration, monitoring, and rollback procedures.
+The AP2 boundary is intentionally represented as a mandate envelope rather than a fake cryptographic implementation. Real AP2/EIP-712 signing, credential validation, key custody, replay policy, and verifier deployment remain required before production authorization.
 
-## 📁 New integration files
+## Real-time infrastructure
 
-| Path | Purpose |
-| --- | --- |
-| `/.well-known/ucp` | Merchant/module capability discovery manifest |
-| `contracts/SkyEcosystemMaxVault.sol` | Authorized-agent + ZK-verifier settlement boundary |
-| `server/ecosystemMaxFederation.ts` | Mandate envelope and validation primitives |
-| `client/src/components/LiveEcosystemTriadPortal.tsx` | SkyLanguage/SkyDating/SkyShop control portal |
+- `cmd/skygaming-ws/main.go` — hardened Go WebSocket service
+- Origin access is deny-by-default through `SKY_WS_ALLOWED_ORIGINS`.
+- Connection read limits, deadlines, ping/pong keepalive, write deadlines, health checks, and graceful shutdown are implemented.
+- `go.mod` pins the Go module boundary to Gorilla WebSocket.
 
-## 🧪 Verification record
+## Container deployment boundary
 
-- Branch created from `main` commit `83ba84231fc94892f731e5efad7f1cf31b126a14`.
-- Integration files were committed to this branch through the GitHub repository API.
-- README was updated on the same branch.
-- Final verification should include compilation, tests, Solidity static analysis, contract tests, frontend build, and end-to-end protocol tests before merge/deployment.
+- `Dockerfile.go` — minimal non-root Go runtime image
+- `Dockerfile.frontend` — production Node application build
+- `Dockerfile.zkml` — fail-closed ZKML verifier adapter
+- `docker-compose.yml` — application, real-time engine, and verifier-adapter mesh with health-gated dependencies
+- `deploy/zkml-worker.mjs` — intentionally fails closed until a real audited ZKML verifier is configured
 
-## 🛠️ Technology Stack
-- TypeScript / React
+## Automated production gate
+
+`.github/workflows/production-gate.yml` now gates the branch with:
+
+1. frozen pnpm install
+2. TypeScript type checking
+3. Vitest test execution
+4. production application build
+5. Go tests, vet, and build
+6. Docker Compose configuration validation
+7. Go and verifier-adapter image builds
+8. Foundry Solidity build/test when a Foundry project is present
+
+### Production authorization checklist
+
+The system must not be labeled production-ready until all of the following have evidence:
+
+- CI checks pass on the exact release commit.
+- Solidity contract tests and independent security/static analysis pass.
+- Real AP2/EIP-712 signing and credential validation are integrated.
+- A deployed, audited ZKML verifier is configured.
+- Production RPC/network, contract addresses, wallets, limits, and secrets are configured securely.
+- Authenticated end-to-end tests cover SkyGaming, SkySchool, SkyShop, SkyLanguage, and SkyDating.
+- TLS, DNS, monitoring, backups, rollback, and incident procedures are verified.
+- Deployment smoke tests pass against the actual production environment.
+
+## Verification record
+
+The integration work is committed to the public GitHub repository on `feature/universal-ecosystem-federation`. GitHub-side file verification confirms the federation sources, UCP manifest, CI gate, Go service, and deployment artifacts are present on the branch.
+
+**Do not confuse “code committed” with “production deployed.”** The final merge/deploy gate is intentionally evidence-based.
+
+## Technology Stack
+
+- TypeScript / React / Vite
 - Solidity `^0.8.24`
-- Node.js server-side federation primitives
+- Go / Gorilla WebSocket
+- Node.js
 - REST / MCP / A2A integration boundaries
+- UCP-style discovery
+- AP2-style intent boundary
 - ZK proof verifier interface
+- Docker Compose
+- GitHub Actions / Foundry gate
 
-## 👨‍💻 Author
-**Skyler Blue Spillers**  
-Software Engineer & Founder
+## Author
+
+**Skyler Blue Spillers** — Software Engineer & Founder
 
 ---
 *Powered by SkyCoin4444*
