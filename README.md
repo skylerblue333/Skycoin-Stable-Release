@@ -56,7 +56,7 @@ The AP2 boundary is intentionally represented as a mandate envelope rather than 
 
 ## Current verification state
 
-**GitHub-side verification: PASS.** The branch contains all 14 expected integration/deployment files and the README reflects the current architecture. The latest PR head is `160f3ca16bee9d2b92967ab3a95ade52824bd511`. GitHub currently reports the PR as open and mergeable. No GitHub Actions run is currently associated with that exact head, so CI execution itself is **not yet verified**. cite_placeholder
+**GitHub-side verification: PASS.** The branch contains all 14 expected integration/deployment files and the README reflects the current architecture. The latest PR head is `160f3ca16bee9d2b92967ab3a95ade52824bd511`. GitHub currently reports the PR as open and mergeable. No GitHub Actions run is currently associated with that exact head, so CI execution itself is **not yet verified**.
 
 ### Production authorization checklist
 
