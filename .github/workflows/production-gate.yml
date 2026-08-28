@@ -38,7 +38,7 @@ jobs:
           # Dockerfile.go is container syntax, not a Go source file; exclude it
           # from Go package discovery while keeping it available to the container job.
           mv Dockerfile.go Dockerfile.go.container
-          go mod download
+          go mod tidy
           go test ./...
           go vet ./...
           go build ./cmd/skygaming-ws
