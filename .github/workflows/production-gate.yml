@@ -1,0 +1,72 @@
+name: Production Gate
+
+on:
+  push:
+    branches: [main, 'feature/**']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  typescript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm test
+      - run: pnpm build
+
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: false
+      - run: |
+          # Dockerfile.go is container syntax, not a Go source file; exclude it
+          # from Go package discovery while keeping it available to the container job.
+          mv Dockerfile.go Dockerfile.go.container
+          go mod tidy
+          go test ./...
+          go vet ./...
+          go build ./cmd/skygaming-ws
+          mv Dockerfile.go.container Dockerfile.go
+
+  containers:
+    runs-on: ubuntu-latest
+    needs: [typescript, go]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose configuration
+        env:
+          SKY_WS_ALLOWED_ORIGINS: https://example.invalid
+          NEXT_PUBLIC_WS_URL: wss://example.invalid/ws
+        run: docker compose config
+      - run: docker build -f Dockerfile.go -t skycoin-go-gate .
+      - run: docker build -f Dockerfile.zkml -t skycoin-zkml-gate .
+
+  solidity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      - run: forge --version
+      - run: |
+          if [ -f foundry.toml ]; then
+            forge build
+            forge test
+          else
+            echo "Foundry project not configured yet; Solidity source is gated for external audit and test harness creation."
+          fi

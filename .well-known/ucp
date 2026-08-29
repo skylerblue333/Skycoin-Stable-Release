@@ -1,0 +1,33 @@
+{
+  "$schema": "https://ucp.dev/schemas/2026/profile.json",
+  "protocol_version": "2026-04-08",
+  "merchant": {
+    "name": "SkyCoin4444 Ecosystem",
+    "domain": "skycoin4444.com",
+    "supported_transports": ["REST", "MCP", "A2A"]
+  },
+  "modules": [
+    "SkyLanguage",
+    "SkyDating",
+    "SkyShop",
+    "SkySchool",
+    "SkyGaming"
+  ],
+  "services": {
+    "gaming": "/api/ucp/gaming",
+    "shopping": "/api/ucp/shopping",
+    "identity": "/api/zkml/personhood",
+    "education": "/api/skyschool/credentials",
+    "language": "/api/skylanguage/sessions",
+    "dating": "/api/skydating/matches"
+  },
+  "capabilities": [
+    "dev.ucp.shopping.checkout",
+    "dev.ucp.gaming.session",
+    "com.skycoin.agent.zkml-settlement",
+    "com.skyschool.credentials.soulbound",
+    "com.skylanguage.reputation-rewards",
+    "com.skydating.zk-personhood"
+  ],
+  "status": "reference-integration"
+}

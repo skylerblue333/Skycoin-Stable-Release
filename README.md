@@ -1,44 +1,94 @@
 <!-- PORTFOLIO PROJECT PROFILE: maintained by the repository owner -->
 
-## Project profile and code-audit snapshot
-
-**What this is:** **Skycoin-Stable-Release** is a public repository described as: “Optimized and stabilized version of the Skycoin digital asset platform. #SkyCoin4444 #AI #Blockchain #DevOps #Innovation” Its dominant language signals are **TypeScript/React (1081 files), TypeScript (482 files), SQL (9 files), Shell (1 files), HTML (1 files), JavaScript (1 files), CSS (1 files)**.
-
-**Why it has value:** Its value is best understood through the implementation evidence currently present in the repository: **1625 tracked files** were observed in the shallow audit, with the source structure and existing documentation providing the project’s specific context. This README does not treat a prototype, experiment, or archive as a production system without supporting evidence.
-
-**Implementation evidence:** 19 test-related file(s) detected; 4 dependency or package manifest(s) detected; No CI, build, Docker, or infrastructure signal was detected by the audit.; and 5 documentation or governance file(s) detected. Test filenames observed include `vitest.config.ts`, `client/src/components/ui/aspect-ratio.tsx`, `client/src/pages/generated/Apitester_907.tsx`, `client/src/pages/generated/Arcadetournamentspectator_626.tsx`, `client/src/pages/generated/Cryptoattestationscreen_361.tsx`, `client/src/pages/generated/Cryptobacktestingtool_235.tsx`. Dependency or package files include `package.json`, `pnpm-lock.yaml`, `requirements.txt`, `rust_components/Cargo.toml`. Build, CI, or infrastructure signals include none detected.
-
-**Current status:** The repository is tracked on the `main` branch. The existing source tree, configuration, tests, workflows, and documentation remain authoritative for supported behavior and maturity. A code audit is not a production-readiness certification, and the presence of a test or workflow file does not establish that all checks pass.
-
-**Relationship to the wider portfolio:** This repository is one focused component of the broader Skyler Blue Spillers portfolio across AI, software engineering, cloud and DevOps, cybersecurity, blockchain, finance, education, social systems, and creative work. It may provide a service boundary, implementation pattern, experiment, archive, or reusable idea for related repositories. Treat repositories as technical dependencies only where documented interfaces and verified project requirements support that relationship.
-
-**Quality and security note:** Potential secret-like or credential-like patterns were detected in repository text and require manual review; the static scan does not prove that a real secret is exposed. The audit also located TODO/FIXME markers in 7 file(s), indicating areas that may deserve follow-up.
-
----
-
 # Skycoin Stable Release
 
-![GitHub stars](https://img.shields.io/github/stars/skylerblue333/Skycoin-Stable-Release?style=flat-square)
-![GitHub license](https://img.shields.io/github/license/skylerblue333/Skycoin-Stable-Release?style=flat-square)
+**Skycoin-Stable-Release** is a public engineering component of the **SkyCoin4444** ecosystem spanning TypeScript/React, AI, blockchain, education, commerce, social modules, and real-time infrastructure.
 
-## 🌟 Overview
-**Skycoin-Stable-Release** is a professional-grade project within the **SkyCoin4444** ecosystem. It focuses on delivering high-value solutions in the domain of **TypeScript, JavaScript, Python, Go, Rust**.
+> **Status: production-gate engineering branch — NOT a production deployment.** Source code, CI configuration, and manifests are not evidence that external protocols, wallets, ZKML verifiers, or contracts have been deployed.
 
-## 🚀 Key Features
-- **Scalable Architecture**: Designed for enterprise-level growth and performance.
-- **Modern Standards**: Implements best practices for clean code and maintainability.
-- **Robust Integration**: Built to work seamlessly within modern cloud-native environments.
+## Universal Ecosystem Federation
 
-## 🛠️ Technology Stack
-- **Primary Domain**: TypeScript, JavaScript, Python, Go, Rust
-- **Ecosystem**: SkyCoin4444 Digital Platform
+This branch connects the integration boundaries for:
 
-## 📂 Structure
-The project is organized into a modular structure to ensure clarity and ease of development.
+- **SkyLanguage** — language sessions and reputation rewards
+- **SkyDating** — privacy-preserving personhood/match workflows
+- **SkyShop** — agent-discoverable commerce and settlement
+- **SkySchool** — credentials and learn-to-earn reward boundaries
+- **SkyGaming** — real-time multiplayer/session transport
 
-## 👨‍💻 Author
-**Skyler Blue Spillers**
-*Professional Chess Player & Software Engineer*
+### Protocol layer
+
+- `/.well-known/ucp` — UCP-style merchant and capability discovery
+- `server/ecosystemMaxFederation.ts` — mandate envelope and payload validation
+- `contracts/SkyEcosystemMaxVault.sol` — authorized-agent + ZK verifier settlement boundary
+- `contracts/SkyEcosystemUltimateVault.sol` — upgraded universal settlement boundary
+- `client/src/components/LiveEcosystemTriadPortal.tsx` — Social-Fi/commerce control portal
+
+The AP2 boundary is intentionally represented as a mandate envelope rather than a fake cryptographic implementation. Real AP2/EIP-712 signing, credential validation, key custody, replay policy, and verifier deployment remain required before production authorization.
+
+## Real-time infrastructure
+
+- `cmd/skygaming-ws/main.go` — hardened Go WebSocket service
+- Origin access is deny-by-default through `SKY_WS_ALLOWED_ORIGINS`.
+- Connection read limits, deadlines, ping/pong keepalive, write deadlines, health checks, and graceful shutdown are implemented.
+- `go.mod` pins the Go module boundary to Gorilla WebSocket.
+
+## Container deployment boundary
+
+- `Dockerfile.go` — minimal non-root Go runtime image
+- `Dockerfile.frontend` — production Node application build
+- `Dockerfile.zkml` — fail-closed ZKML verifier adapter
+- `docker-compose.yml` — application, real-time engine, and verifier-adapter mesh with health-gated dependencies
+- `deploy/zkml-worker.mjs` — intentionally fails closed until a real audited ZKML verifier is configured
+
+## Automated production gate
+
+`.github/workflows/production-gate.yml` gates changes with:
+
+1. frozen pnpm install
+2. TypeScript type checking
+3. Vitest test execution
+4. production application build
+5. Go tests, vet, and build
+6. Docker Compose configuration validation
+7. Go and verifier-adapter image builds
+8. Foundry Solidity build/test when a Foundry project is present
+
+## Current verification state
+
+**GitHub-side verification: PASS.** The branch contains all 14 expected integration/deployment files and the README reflects the current architecture. The latest PR head is `160f3ca16bee9d2b92967ab3a95ade52824bd511`. GitHub currently reports the PR as open and mergeable. No GitHub Actions run is currently associated with that exact head, so CI execution itself is **not yet verified**.
+
+### Production authorization checklist
+
+The system must not be labeled production-ready until all of the following have evidence:
+
+- CI checks pass on the exact release commit.
+- Solidity contract tests and independent security/static analysis pass.
+- Real AP2/EIP-712 signing and credential validation are integrated.
+- A deployed, audited ZKML verifier is configured.
+- Production RPC/network, contract addresses, wallets, limits, and secrets are configured securely.
+- Authenticated end-to-end tests cover SkyGaming, SkySchool, SkyShop, SkyLanguage, and SkyDating.
+- TLS, DNS, monitoring, backups, rollback, and incident procedures are verified.
+- Deployment smoke tests pass against the actual production environment.
+
+**Do not confuse “code committed” with “production deployed.”** The final merge/deploy gate is intentionally evidence-based.
+
+## Technology Stack
+
+- TypeScript / React / Vite
+- Solidity `^0.8.24`
+- Go / Gorilla WebSocket
+- Node.js
+- REST / MCP / A2A integration boundaries
+- UCP-style discovery
+- AP2-style intent boundary
+- ZK proof verifier interface
+- Docker Compose
+- GitHub Actions / Foundry gate
+
+## Author
+
+**Skyler Blue Spillers** — Software Engineer & Founder
 
 ---
 *Powered by SkyCoin4444*
